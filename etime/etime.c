@@ -31,6 +31,6 @@ int main(int argc, const char **argv)
   WaitForSingleObject(pi.hProcess, INFINITE);
 
   QueryPerformanceCounter(&end_time);
-  seconds = (double)(end_time.QuadPart - start_time.QuadPart) * 1000000.0 / (double)frequency.QuadPart / 1000000.0;
+  seconds = (double)(end_time.QuadPart - start_time.QuadPart) / (double)frequency.QuadPart;
   printf("Command took %.6f seconds\n", seconds);
 }
