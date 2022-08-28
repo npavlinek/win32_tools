@@ -3,36 +3,34 @@
 #include <string.h>
 
 #define WIN32_LEAN_AND_MEAN
-
 #include <windows.h>
 
-int main(int argc, const char ** argv)
+int main(int argc, const char **argv)
 {
-   LARGE_INTEGER frequency = {0};
-   QueryPerformanceFrequency(&frequency);
+  LARGE_INTEGER frequency, start_time, end_time;
+  STARTUPINFO si = {0};
+  PROCESS_INFORMATION pi = {0};
+  char buffer[4096] = {0};
+  int i;
+  double seconds;
 
-   char buffer[4096] = {0};
-   for (size_t i = 1; i < argc; ++i)
-   {
-      strcat_s(buffer, 4096, argv[i]);
-      strcat_s(buffer, 4096, " ");
-   }
+  QueryPerformanceFrequency(&frequency);
 
-   STARTUPINFO si = {.cb = sizeof(STARTUPINFO)};
-   PROCESS_INFORMATION pi = {0};
+  for (i = 1; i < argc; ++i) {
+    strcat_s(buffer, 4096, argv[i]);
+    strcat_s(buffer, 4096, " ");
+  }
 
-   LARGE_INTEGER start_time = {0};
-   QueryPerformanceCounter(&start_time);
+  QueryPerformanceCounter(&start_time);
 
-   if (CreateProcessA(NULL, buffer, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi) == 0)
-   {
-      fprintf(stderr, "error: couldn't execute command\n");
-      exit(1);
-   }
-   WaitForSingleObject(pi.hProcess, INFINITE);
+  si.cb = sizeof(STARTUPINFO);
+  if (CreateProcessA(NULL, buffer, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi) == 0) {
+    fprintf(stderr, "error: couldn't execute command\n");
+    exit(1);
+  }
+  WaitForSingleObject(pi.hProcess, INFINITE);
 
-   LARGE_INTEGER end_time = {0};
-   QueryPerformanceCounter(&end_time);
-   const double seconds = (double)(end_time.QuadPart - start_time.QuadPart) * 1000000.0 / (double)frequency.QuadPart / 1000000.0;
-   printf("Command took %.6f seconds\n", seconds);
+  QueryPerformanceCounter(&end_time);
+  seconds = (double)(end_time.QuadPart - start_time.QuadPart) * 1000000.0 / (double)frequency.QuadPart / 1000000.0;
+  printf("Command took %.6f seconds\n", seconds);
 }
