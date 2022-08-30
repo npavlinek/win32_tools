@@ -33,4 +33,5 @@ int main(int argc, const char **argv)
   QueryPerformanceCounter(&end_time);
   seconds = (double)(end_time.QuadPart - start_time.QuadPart) / (double)frequency.QuadPart;
   printf("Command took %.6f seconds\n", seconds);
+  return 0;
 }
