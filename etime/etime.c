@@ -2,36 +2,47 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "fixed_width_integers.h"
+#include "win32.h"
 
-int main(int argc, const char **argv)
+int main(int argc, const char** argv)
 {
-  LARGE_INTEGER frequency, start_time, end_time;
-  STARTUPINFO si = {0};
-  PROCESS_INFORMATION pi = {0};
-  char buffer[4096] = {0};
-  int i;
-  double seconds;
+    Win32Fns win32 = { 0 };
+    uint64 freq, begin, end;
+    char buf[4096] = { 0 };
+    WIN32_STARTUPINFOA si = { 0 };
+    WIN32_PROCESS_INFORMATION pi = { 0 };
+    int i;
+    double secs;
 
-  QueryPerformanceFrequency(&frequency);
+    if (argc < 2)
+    {
+        fprintf(stderr, "error: no command given\n");
+        return 1;
+    }
 
-  for (i = 1; i < argc; ++i) {
-    strcat_s(buffer, 4096, argv[i]);
-    strcat_s(buffer, 4096, " ");
-  }
+    Win32_LoadFunctions(&win32);
 
-  QueryPerformanceCounter(&start_time);
+    win32.QueryPerformanceFrequency(&freq);
 
-  si.cb = sizeof(STARTUPINFO);
-  if (CreateProcessA(NULL, buffer, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi) == 0) {
-    fprintf(stderr, "error: couldn't execute command\n");
-    exit(1);
-  }
-  WaitForSingleObject(pi.hProcess, INFINITE);
+    for (i = 1; i < argc; ++i)
+    {
+        strcat_s(buf, 4096, argv[i]);
+        strcat_s(buf, 4096, " ");
+    }
 
-  QueryPerformanceCounter(&end_time);
-  seconds = (double)(end_time.QuadPart - start_time.QuadPart) / (double)frequency.QuadPart;
-  printf("Command took %.6f seconds\n", seconds);
-  return 0;
+    win32.QueryPerformanceCounter(&begin);
+
+    si.cb = sizeof(WIN32_STARTUPINFOA);
+    if (win32.CreateProcessA(NULL, buf, NULL, NULL, 0, 0, NULL, NULL, &si, &pi) == 0)
+    {
+        fprintf(stderr, "error: couldn't execute command\n");
+        return 1;
+    }
+    win32.WaitForSingleObject(pi.hProcess, WIN32_INFINITE);
+
+    win32.QueryPerformanceCounter(&end);
+    secs = (double)(end - begin) / (double)freq;
+    printf("Command took %.6f seconds\n", secs);
+    return 0;
 }

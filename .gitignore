@@ -1,0 +1,6 @@
+*.d
+*.exe
+*.o
+*.pdb
+*.swp
+bin/
