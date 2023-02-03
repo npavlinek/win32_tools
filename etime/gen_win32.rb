@@ -95,9 +95,9 @@ win32_h_template = <<~EOF
   <% end -%>
 
   #endif /* WIN32_H */
-  EOF
+EOF
 
-  win32_c_template = <<EOF
+win32_c_template = <<~EOF
   #include "win32.h"
 
   void Win32_LoadFunctions(Win32Fns* win32)
