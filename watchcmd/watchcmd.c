@@ -85,8 +85,8 @@ static void PushUTF8FromUTF16(stringbuf_t* buf, const wchar_t* str)
         if (unit <= 0xd7ff || (unit >= 0xe000 && unit <= 0xffff))
         {
             /* Characters in this range fall into the Basic Multilingual Plane (BMP), which contains
-             * most commonly used characters. The encoding scheme is simple: UTF-16 code units are
-             * numerically equal to Unicode code points. */
+             * most commonly used characters. The encoding scheme is simple: the UTF-16 code unit is
+             * numerically equal to the Unicode code point. */
 
             if (unit <= 0x7f)
                 PushChar(buf, (char)(unit & 0xff));
@@ -123,12 +123,12 @@ static void PushUTF8FromUTF16(stringbuf_t* buf, const wchar_t* str)
              * 16-bit number of the following form: 110110xxxxxxxxxx. This is the first UTF-16 code
              * unit.
              *
-             * 3. The low 10 bits of the resulting 20-bit number added with 0xdc00 to produce a
+             * 3. The low 10 bits of the resulting 20-bit number are added with 0xdc00 to produce a
              * 16-bit number of the following form: 110111xxxxxxxxxx. This is the second UTF-16 code
              * unit.
              *
-             * To decode we just do the reverse: extract the bottom 10 bits from each UTF-16 unit
-             * and OR them together, then add 0x10000. */
+             * To decode we just do the reverse: extract the bottom 10 bits from each UTF-16 code
+             * unit and bitwise OR them together, then add 0x10000. */
 
             const unsigned int unit0 = unit & 0x3ff;
             const unsigned int unit1 = str[++i] & 0x3ff;
