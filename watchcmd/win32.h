@@ -1,85 +1,139 @@
-#pragma once
+#ifndef WIN32_H
+#define WIN32_H
 
-namespace Win32 {
+#include <stddef.h>
 
-static const void* INVALID_HANDLE_VALUE = reinterpret_cast<void*>(static_cast<intptr_t>(-1));
+#include "fixed_width_integers.h"
 
-enum : uint32_t {
-    CTRL_C_EVENT = 0,
-    FILE_FLAG_BACKUP_SEMANTICS = 0x02000000,
-    FILE_FLAG_OVERLAPPED = 0x40000000,
-    FILE_LIST_DIRECTORY = 1,
-    FILE_NOTIFY_CHANGE_LAST_WRITE = 0x10,
-    FILE_NOTIFY_CHANGE_SIZE = 0x8,
-    FILE_SHARE_READ = 0x1,
-    FILE_SHARE_WRITE = 0x2,
-    INFINITE = 0xffffffff,
-    OPEN_EXISTING = 3,
-    WAIT_TIMEOUT = 258,
-};
+#define BOOL int
+#define DWORD uint32
+#define FARPROC void*
+#define HANDLE void*
+#define HMODULE void*
+#define LPBYTE unsigned char*
+#define LPCSTR const char*
+#define LPDWORD uint32*
+#define LPOVERLAPPED WIN32_OVERLAPPED*
+#define LPPROCESS_INFORMATION WIN32_PROCESS_INFORMATION*
+#define LPSTARTUPINFOA WIN32_STARTUPINFOA*
+#define LPSTR char*
+#define LPVOID void*
+#define PVOID void*
+#define ULONG_PTR uintptr
+#define WCHAR wchar_t
+#define WORD uint16
 
-struct FILE_NOTIFY_INFORMATION {
-    uint32_t NextEntryOffset;
-    uint32_t Action;
-    uint32_t FileNameLength;
-    wchar_t FileName[1];
-};
+#define WIN32_CTRL_C_EVENT 0
+#define WIN32_FILE_FLAG_BACKUP_SEMANTICS 33554432
+#define WIN32_FILE_FLAG_OVERLAPPED 1073741824
+#define WIN32_FILE_LIST_DIRECTORY 1
+#define WIN32_FILE_NOTIFY_CHANGE_LAST_WRITE 16
+#define WIN32_FILE_NOTIFY_CHANGE_SIZE 8
+#define WIN32_FILE_SHARE_READ 1
+#define WIN32_FILE_SHARE_WRITE 2
+#define WIN32_INFINITE 4294967295
+#define WIN32_INVALID_HANDLE_VALUE -1
+#define WIN32_OPEN_EXISTING 3
+#define WIN32_WAIT_TIMEOUT 258
 
-struct OVERLAPPED {
-    uintptr_t Internal;
-    uintptr_t InternalHigh;
-    union {
-        struct {
-            uint32_t Offset;
-            uint32_t OffsetHigh;
+typedef struct WIN32_FILE_NOTIFY_INFORMATION
+{
+    DWORD NextEntryOffset;
+    DWORD Action;
+    DWORD FileNameLength;
+    WCHAR FileName[1];
+} WIN32_FILE_NOTIFY_INFORMATION;
+
+typedef struct WIN32_OVERLAPPED
+{
+    ULONG_PTR Internal;
+    ULONG_PTR InternalHigh;
+    union
+    {
+        struct
+        {
+            DWORD Offset;
+            DWORD OffsetHigh;
         } DUMMYSTRUCTNAME;
-        void* Pointer;
+        PVOID Pointer;
     } DUMMYUNIONNAME;
-    void* hEvent;
-};
+    HANDLE hEvent;
+} WIN32_OVERLAPPED;
 
-struct PROCESS_INFORMATION {
-    void* hProcess;
-    void* hThread;
-    uint32_t dwProcessId;
-    uint32_t dwThreadId;
-};
+typedef struct WIN32_PROCESS_INFORMATION
+{
+    HANDLE hProcess;
+    HANDLE hThread;
+    DWORD dwProcessId;
+    DWORD dwThreadId;
+} WIN32_PROCESS_INFORMATION;
 
-struct STARTUPINFOA {
-    uint32_t cb;
-    char* lpReserved;
-    char* lpDesktop;
-    char* lpTitle;
-    uint32_t dwX;
-    uint32_t dwY;
-    uint32_t dwXSize;
-    uint32_t dwYSize;
-    uint32_t dwXCountChars;
-    uint32_t dwYCountChars;
-    uint32_t dwFillAttribute;
-    uint32_t dwFlags;
-    uint16_t wShowWindow;
-    uint16_t cbReserved2;
-    unsigned char* lpReserved2;
-    void* hStdInput;
-    void* hStdOutput;
-    void* hStdError;
-};
+typedef struct WIN32_STARTUPINFOA
+{
+    DWORD cb;
+    LPSTR lpReserved;
+    LPSTR lpDesktop;
+    LPSTR lpTitle;
+    DWORD dwX;
+    DWORD dwY;
+    DWORD dwXSize;
+    DWORD dwYSize;
+    DWORD dwXCountChars;
+    DWORD dwYCountChars;
+    DWORD dwFillAttribute;
+    DWORD dwFlags;
+    WORD wShowWindow;
+    WORD cbReserved2;
+    LPBYTE lpReserved2;
+    HANDLE hStdInput;
+    HANDLE hStdOutput;
+    HANDLE hStdError;
+} WIN32_STARTUPINFOA;
 
-extern "C" {
-__declspec(dllimport) bool CloseHandle(void* hObject);
-__declspec(dllimport) bool CreateProcessA(const char* lpApplicationName, char* lpCommandLine, void* lpProcessAttributes, void* lpThreadAttributes, bool bInheritHandles, uint32_t dwCreationFlags, void* lpEnvironment, const char* lpCurrentDirectory, STARTUPINFOA* lpStartupInfo, PROCESS_INFORMATION* lpProcessInformation);
-__declspec(dllimport) bool GetOverlappedResultEx(void* hFile, OVERLAPPED* lpOverlapped, uint32_t* lpNumberOfBytesTransferred, uint32_t dwMilliseconds, bool bAlertable);
-__declspec(dllimport) bool ReadDirectoryChangesW(void* hDirectory, void* lpBuffer, uint32_t nBufferLength, bool bWatchSubtree, uint32_t dwNotifyFilter, uint32_t* lpBytesReturned, OVERLAPPED* lpOverlapped, void* lpCompletionRoutine);
-__declspec(dllimport) bool SetConsoleCtrlHandler(bool (*HandlerRoutine)(uint32_t), bool Add);
-__declspec(dllimport) uint32_t GetCurrentDirectoryA(uint32_t nBufferLength, char* lpBuffer);
-__declspec(dllimport) uint32_t GetLastError();
-__declspec(dllimport) uint32_t WaitForSingleObject(void* hHandle, uint32_t dwMilliseconds);
-__declspec(dllimport) void ExitProcess(unsigned int uExitCode);
-__declspec(dllimport) void* CreateFileA(const char* lpFileName, uint32_t dwDesiredAccess, uint32_t dwShareMode, void* lpSecurityAttributes, uint32_t dwCreationDisposition, uint32_t dwFlagsAndAttributes, void* hTemplateFile);
-__declspec(dllimport) void* LocalFree(void* hMem);
-__declspec(dllimport) wchar_t* GetCommandLineW();
-__declspec(dllimport) wchar_t** CommandLineToArgvW(const wchar_t* lpCmdLine, int* pNumArgs);
-}
+extern __declspec(dllimport) FARPROC GetProcAddress(HMODULE hModule, LPCSTR lpProcName);
+extern __declspec(dllimport) HMODULE LoadLibraryA(LPCSTR lpLibFileName);
 
-} // namespace Win32
+typedef BOOL (*Win32_CloseHandle)(HANDLE hObject);
+typedef BOOL (*Win32_CreateProcessA)(LPCSTR lpApplicationName, LPSTR lpCommandLine, void* lpProcessAttributes, void* lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment, LPCSTR lpCurrentDirectory, LPSTARTUPINFOA lpStartupInfo, LPPROCESS_INFORMATION lpProcessInformation);
+typedef BOOL (*Win32_GetOverlappedResultEx)(HANDLE hFile, LPOVERLAPPED lpOverlapped, LPDWORD lpNumberOfBytesTransferred, DWORD dwMilliseconds, BOOL bAlertable);
+typedef BOOL (*Win32_ReadDirectoryChangesW)(HANDLE hDirectory, LPVOID lpBuffer, DWORD nBufferLength, BOOL bWatchSubtree, DWORD dwNotifyFilter, LPDWORD lpBytesReturned, LPOVERLAPPED lpOverlapped, void* lpCompletionRoutine);
+typedef BOOL (*Win32_SetConsoleCtrlHandler)(BOOL (*HandlerRoutine)(DWORD dwCtrlType), BOOL Add);
+typedef DWORD (*Win32_GetCurrentDirectoryA)(DWORD nBufferLength, LPSTR lpBuffer);
+typedef DWORD (*Win32_GetLastError)(void);
+typedef DWORD (*Win32_WaitForSingleObject)(HANDLE hHandle, DWORD dwMilliseconds);
+typedef HANDLE (*Win32_CreateFileA)(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, void* lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile);
+
+typedef struct win32_s
+{
+    Win32_CloseHandle CloseHandle;
+    Win32_CreateProcessA CreateProcessA;
+    Win32_GetOverlappedResultEx GetOverlappedResultEx;
+    Win32_ReadDirectoryChangesW ReadDirectoryChangesW;
+    Win32_SetConsoleCtrlHandler SetConsoleCtrlHandler;
+    Win32_GetCurrentDirectoryA GetCurrentDirectoryA;
+    Win32_GetLastError GetLastError;
+    Win32_WaitForSingleObject WaitForSingleObject;
+    Win32_CreateFileA CreateFileA;
+} win32_t;
+
+void LoadWin32Functions(win32_t* win32);
+
+#undef BOOL
+#undef DWORD
+#undef FARPROC
+#undef HANDLE
+#undef HMODULE
+#undef LPBYTE
+#undef LPCSTR
+#undef LPDWORD
+#undef LPOVERLAPPED
+#undef LPPROCESS_INFORMATION
+#undef LPSTARTUPINFOA
+#undef LPSTR
+#undef LPVOID
+#undef PVOID
+#undef ULONG_PTR
+#undef WCHAR
+#undef WORD
+
+#endif /* WIN32_H */
