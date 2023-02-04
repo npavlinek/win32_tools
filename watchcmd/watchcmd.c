@@ -232,7 +232,11 @@ int main(int argc, const char** argv)
         printf(">>> Detected changes: %s\n", sbuf.buf);
 
         si.cb = sizeof(WIN32_STARTUPINFOA);
-        win32.CreateProcessA(NULL, cmd, NULL, NULL, 0, 0, NULL, NULL, &si, &pi);
+        if (!win32.CreateProcessA(NULL, cmd, NULL, NULL, 0, 0, NULL, NULL, &si, &pi))
+        {
+            fprintf(stderr, "error: couldn't execute command '%s'\n", cmd);
+            return 1;
+        }
         win32.WaitForSingleObject(pi.hProcess, WIN32_INFINITE);
         printf(">>> Done\n");
     }
