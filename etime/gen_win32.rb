@@ -53,8 +53,8 @@ EOF
 
 functions = [
   ['kernel32', 'BOOL', 'CreateProcessA', 'LPCSTR lpApplicationName, LPSTR lpCommandLine, void* lpProcessAttributes, void* lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment, LPCSTR lpCurrentDirectory, LPSTARTUPINFOA lpStartupInfo, LPPROCESS_INFORMATION lpProcessInformation'],
-  ['kernel32', 'BOOL', 'QueryPerformanceCounter', 'uint64* lpPerformanceCount'],
-  ['kernel32', 'BOOL', 'QueryPerformanceFrequency', 'uint64* lpFrequency'],
+  ['kernel32', 'BOOL', 'QueryPerformanceCounter', 'int64* lpPerformanceCount'],
+  ['kernel32', 'BOOL', 'QueryPerformanceFrequency', 'int64* lpFrequency'],
   ['kernel32', 'DWORD', 'WaitForSingleObject', 'HANDLE hHandle, DWORD dwMilliseconds'],
 ]
 

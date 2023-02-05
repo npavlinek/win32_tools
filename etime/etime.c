@@ -8,7 +8,7 @@
 int main(int argc, const char** argv)
 {
     Win32Fns win32 = { 0 };
-    uint64 freq, begin, end;
+    int64 freq, begin, end;
     char buf[4096] = { 0 };
     WIN32_STARTUPINFOA si = { 0 };
     WIN32_PROCESS_INFORMATION pi = { 0 };

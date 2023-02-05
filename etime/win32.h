@@ -52,8 +52,8 @@ extern __declspec(dllimport) FARPROC GetProcAddress(HMODULE hModule, LPCSTR lpPr
 extern __declspec(dllimport) HMODULE LoadLibraryA(LPCSTR lpLibFileName);
 
 typedef BOOL (*Win32_CreateProcessA)(LPCSTR lpApplicationName, LPSTR lpCommandLine, void* lpProcessAttributes, void* lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment, LPCSTR lpCurrentDirectory, LPSTARTUPINFOA lpStartupInfo, LPPROCESS_INFORMATION lpProcessInformation);
-typedef BOOL (*Win32_QueryPerformanceCounter)(uint64* lpPerformanceCount);
-typedef BOOL (*Win32_QueryPerformanceFrequency)(uint64* lpFrequency);
+typedef BOOL (*Win32_QueryPerformanceCounter)(int64* lpPerformanceCount);
+typedef BOOL (*Win32_QueryPerformanceFrequency)(int64* lpFrequency);
 typedef DWORD (*Win32_WaitForSingleObject)(HANDLE hHandle, DWORD dwMilliseconds);
 
 typedef struct Win32Fns
