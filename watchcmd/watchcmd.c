@@ -35,7 +35,7 @@ static void* Realloc(void* ptr, size_t size)
 
 typedef struct stringbuf_s
 {
-    char* buf;
+    unsigned char* buf;
     size_t used;
     size_t size;
 } stringbuf_t;
@@ -52,14 +52,14 @@ static void ResetStringBuffer(stringbuf_t* buf)
     buf->used = 0;
 }
 
-static void PushChar(stringbuf_t* buf, char ch)
+static void PushByte(stringbuf_t* buf, unsigned char b)
 {
     if ((buf->size - buf->used - 1) == 0)
     {
         buf->size += buf->size;
         buf->buf = Realloc(buf->buf, buf->size);
     }
-    buf->buf[buf->used++] = ch;
+    buf->buf[buf->used++] = b;
     buf->buf[buf->used] = '\0';
 }
 
@@ -89,24 +89,24 @@ static void PushUTF8FromUTF16(stringbuf_t* buf, const wchar_t* str)
              * numerically equal to the Unicode code point. */
 
             if (unit <= 0x7f)
-                PushChar(buf, (char)(unit & 0xff));
+                PushByte(buf, (unsigned char)(unit & 0xff));
             else if (unit >= 0x80 && unit <= 0x7ff)
             {
-                PushChar(buf, (char)((0x6 << 5) | (unit >> 6)));
-                PushChar(buf, (char)((0x2 << 6) | (unit & 0x3f)));
+                PushByte(buf, (unsigned char)((0x6 << 5) | (unit >> 6)));
+                PushByte(buf, (unsigned char)((0x2 << 6) | (unit & 0x3f)));
             }
             else if (unit >= 0x800 && unit <= 0xffff)
             {
-                PushChar(buf, (char)((0xe << 4) | (unit >> 12)));
-                PushChar(buf, (char)((0x2 << 6) | (unit >> 6)));
-                PushChar(buf, (char)((0x2 << 6) | (unit & 0x3f)));
+                PushByte(buf, (unsigned char)((0xe << 4) | (unit >> 12)));
+                PushByte(buf, (unsigned char)((0x2 << 6) | (unit >> 6)));
+                PushByte(buf, (unsigned char)((0x2 << 6) | (unit & 0x3f)));
             }
             else if (unit >= 0x10000 && unit <= 0x10ffff)
             {
-                PushChar(buf, (char)((0x1e << 3) | (unit >> 18)));
-                PushChar(buf, (char)((0x2 << 6) | (unit >> 12)));
-                PushChar(buf, (char)((0x2 << 6) | (unit >> 6)));
-                PushChar(buf, (char)((0x2 << 6) | (unit & 0x3f)));
+                PushByte(buf, (unsigned char)((0x1e << 3) | (unit >> 18)));
+                PushByte(buf, (unsigned char)((0x2 << 6) | (unit >> 12)));
+                PushByte(buf, (unsigned char)((0x2 << 6) | (unit >> 6)));
+                PushByte(buf, (unsigned char)((0x2 << 6) | (unit & 0x3f)));
             }
             else
                 assert(0);
@@ -136,10 +136,10 @@ static void PushUTF8FromUTF16(stringbuf_t* buf, const wchar_t* str)
 
             assert((str[i - 1] & 0xd800) == 0xd800 && (str[i] & 0xdc00) == 0xdc00);
 
-            PushChar(buf, (char)((0x1e << 3) | (unicode >> 18)));
-            PushChar(buf, (char)((0x2 << 6) | (unicode >> 12)));
-            PushChar(buf, (char)((0x2 << 6) | (unicode >> 6)));
-            PushChar(buf, (char)((0x2 << 6) | (unicode & 0x3f)));
+            PushByte(buf, (unsigned char)((0x1e << 3) | (unicode >> 18)));
+            PushByte(buf, (unsigned char)((0x2 << 6) | (unicode >> 12)));
+            PushByte(buf, (unsigned char)((0x2 << 6) | (unicode >> 6)));
+            PushByte(buf, (unsigned char)((0x2 << 6) | (unicode & 0x3f)));
         }
     }
 }
