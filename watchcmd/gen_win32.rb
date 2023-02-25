@@ -94,6 +94,7 @@ EOF
 functions = [
   ['kernel32', 'BOOL', 'CloseHandle', 'HANDLE hObject'],
   ['kernel32', 'BOOL', 'CreateProcessA', 'LPCSTR lpApplicationName, LPSTR lpCommandLine, void* lpProcessAttributes, void* lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment, LPCSTR lpCurrentDirectory, LPSTARTUPINFOA lpStartupInfo, LPPROCESS_INFORMATION lpProcessInformation'],
+  ['kernel32', 'BOOL', 'GetExitCodeProcess', 'HANDLE hProcess, LPDWORD lpExitCode'],
   ['kernel32', 'BOOL', 'GetOverlappedResultEx', 'HANDLE hFile, LPOVERLAPPED lpOverlapped, LPDWORD lpNumberOfBytesTransferred, DWORD dwMilliseconds, BOOL bAlertable'],
   ['kernel32', 'BOOL', 'ReadDirectoryChangesW', 'HANDLE hDirectory, LPVOID lpBuffer, DWORD nBufferLength, BOOL bWatchSubtree, DWORD dwNotifyFilter, LPDWORD lpBytesReturned, LPOVERLAPPED lpOverlapped, void* lpCompletionRoutine'],
   ['kernel32', 'BOOL', 'SetConsoleCtrlHandler', 'BOOL (*HandlerRoutine)(DWORD dwCtrlType), BOOL Add'],

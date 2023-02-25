@@ -6,6 +6,7 @@ void LoadWin32Functions(win32_t* win32)
 
     win32->CloseHandle = (Win32_CloseHandle)GetProcAddress(kernel32, "CloseHandle");
     win32->CreateProcessA = (Win32_CreateProcessA)GetProcAddress(kernel32, "CreateProcessA");
+    win32->GetExitCodeProcess = (Win32_GetExitCodeProcess)GetProcAddress(kernel32, "GetExitCodeProcess");
     win32->GetOverlappedResultEx = (Win32_GetOverlappedResultEx)GetProcAddress(kernel32, "GetOverlappedResultEx");
     win32->ReadDirectoryChangesW = (Win32_ReadDirectoryChangesW)GetProcAddress(kernel32, "ReadDirectoryChangesW");
     win32->SetConsoleCtrlHandler = (Win32_SetConsoleCtrlHandler)GetProcAddress(kernel32, "SetConsoleCtrlHandler");

@@ -95,6 +95,7 @@ extern __declspec(dllimport) HMODULE LoadLibraryA(LPCSTR lpLibFileName);
 
 typedef BOOL (*Win32_CloseHandle)(HANDLE hObject);
 typedef BOOL (*Win32_CreateProcessA)(LPCSTR lpApplicationName, LPSTR lpCommandLine, void* lpProcessAttributes, void* lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment, LPCSTR lpCurrentDirectory, LPSTARTUPINFOA lpStartupInfo, LPPROCESS_INFORMATION lpProcessInformation);
+typedef BOOL (*Win32_GetExitCodeProcess)(HANDLE hProcess, LPDWORD lpExitCode);
 typedef BOOL (*Win32_GetOverlappedResultEx)(HANDLE hFile, LPOVERLAPPED lpOverlapped, LPDWORD lpNumberOfBytesTransferred, DWORD dwMilliseconds, BOOL bAlertable);
 typedef BOOL (*Win32_ReadDirectoryChangesW)(HANDLE hDirectory, LPVOID lpBuffer, DWORD nBufferLength, BOOL bWatchSubtree, DWORD dwNotifyFilter, LPDWORD lpBytesReturned, LPOVERLAPPED lpOverlapped, void* lpCompletionRoutine);
 typedef BOOL (*Win32_SetConsoleCtrlHandler)(BOOL (*HandlerRoutine)(DWORD dwCtrlType), BOOL Add);
@@ -107,6 +108,7 @@ typedef struct win32_s
 {
     Win32_CloseHandle CloseHandle;
     Win32_CreateProcessA CreateProcessA;
+    Win32_GetExitCodeProcess GetExitCodeProcess;
     Win32_GetOverlappedResultEx GetOverlappedResultEx;
     Win32_ReadDirectoryChangesW ReadDirectoryChangesW;
     Win32_SetConsoleCtrlHandler SetConsoleCtrlHandler;

@@ -205,6 +205,7 @@ int main(int argc, const char** argv)
         WIN32_FILE_NOTIFY_INFORMATION* file_info = NULL;
         WIN32_STARTUPINFOA si = { 0 };
         WIN32_PROCESS_INFORMATION pi = { 0 };
+        uint32 pexit;
 
         win32.ReadDirectoryChangesW(dir_handle, info, 1024, 1,
             WIN32_FILE_NOTIFY_CHANGE_SIZE | WIN32_FILE_NOTIFY_CHANGE_LAST_WRITE, NULL,
@@ -238,7 +239,8 @@ int main(int argc, const char** argv)
             return 1;
         }
         win32.WaitForSingleObject(pi.hProcess, WIN32_INFINITE);
-        printf(">>> Done\n");
+        win32.GetExitCodeProcess(pi.hProcess, &pexit);
+        printf(">>> Process exited with %d\n", pexit);
     }
 
     win32.CloseHandle(dir_handle);
