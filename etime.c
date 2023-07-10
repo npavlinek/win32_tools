@@ -5,12 +5,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Dynamic string. */
 typedef struct str {
-    char *data;
-    size_t size;
-    size_t cap;
+    char *data;     /* Null-terminated string data. */
+    size_t size;    /* Length of the string. */
+    size_t cap;     /* Maximum length before more memory is needed. */
 } str;
 
+/* Create a new dynamic string with a maximum length of 'cap'. Extra memory is
+ * allocated for the null-terminator. If the allocation fails, an empty object
+ * is returned. */
 static str strNew(size_t cap) {
     str str = {0};
     void *data = malloc((cap + 1) * sizeof(char));
@@ -22,12 +26,17 @@ static str strNew(size_t cap) {
     return str;
 }
 
+/* Free the memory used by the dynamic string 'str'. */
 static void strFree(str *str) {
     if (str == NULL) return;
     free(str->data);
     memset(str, 0, sizeof(*str));
 }
 
+/* Append the string 's' to the dynamic string 'str'. If there isn't enough
+ * space to store 's', more memory is allocated. If the allocation fails 0 is
+ * returned, otherwise 1 is returned. The resulting string is automatically
+ * null-terminated. */
 static int strAppend(str *str, const char *s) {
     size_t len = strlen(s);
     if (str == NULL) return 0;
