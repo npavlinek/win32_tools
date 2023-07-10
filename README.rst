@@ -13,4 +13,4 @@ A repository of personal command line programs for Windows.
 License
 =======
 
-The Unlicense. See ``UNLICENSE``` file for more details.
+The Unlicense. See ``UNLICENSE`` file for more details.
