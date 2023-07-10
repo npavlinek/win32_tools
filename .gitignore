@@ -1,7 +1,3 @@
-**/fixed_width_integers.h
-*.d
-*.exe
-*.o
-*.pdb
 *.swp
 bin/
+out/
