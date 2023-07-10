@@ -24,6 +24,18 @@ To build using Clang with optimizations enabled, use::
 
    build_win32_clang.bat optimized
 
+Build artifacts are placed into the ``out`` directory. If the directory doesn't
+exist, it'll be created.
+
+Installation instructions
+=========================
+
+To install the executables built above somewhere where they'll be more
+accessible, use the ``install.bat`` script with the path to the desired
+directory like so::
+
+   install.bat <install_dir>
+
 License
 =======
 
