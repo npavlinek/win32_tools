@@ -39,4 +39,5 @@ directory like so::
 License
 =======
 
-The Unlicense. See ``UNLICENSE`` file for more details.
+Zero Clause BSD License, a public domain equivalent license. See the ``LICENSE``
+file for more details.
